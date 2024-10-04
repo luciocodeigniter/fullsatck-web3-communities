@@ -21,6 +21,8 @@ contract Web3DevToken is ERC20 {
 
     // precisamos armazenar os endereços e o total de convites que cada um já fez.
     // para isso usaremos uma estrutura de chave e valor
+    //! importante aqui é a visibilidade `private` e teremos um metodo público
+    //! para retornar o número de convites de acordo com o `address` informado
     mapping(address => uint256) private inviteCount;
     
     // "Web3DevToken" é o nome do token.
@@ -28,13 +30,13 @@ contract Web3DevToken is ERC20 {
     constructor() ERC20("Web3DevToken", "W3DT") {
         // Essa linha está mintando (criando) um token e atribuindo-os ao msg.sender,
         // que é o endereço que fez o deploy do contrato. 
-        // ou seja, o deployer receberá o primeiro convite       
+        // ou seja, o deployer receberá o primeiro convite (token)     
         _mint(msg.sender, inviteAmount);
     }
 
     // função pública para qualquer pessoa convidar outra pessoa
     function invite(address to) public {
-        // Apenas endereços que já são convidados poderão convidar outros.
+        // Apenas endereços que já são convidados (que tem o token) poderão convidar outros.
         // Para isso verificamos o balance do sender
         require(balanceOf(msg.sender) > 0, "You are not invited");
 
@@ -46,7 +48,7 @@ contract Web3DevToken is ERC20 {
         require(inviteCount[msg.sender] < MAX_INVITES, "You can't invite more than 3 people.");
 
         // Cada endereço só pode ser convidado uma vez
-        // balanceOf(to) == 0: Garante que o endereço to não possui tokens (ou convites) ainda. 
+        // balanceOf(to) == 0: Garante que o endereço `to` não possui tokens (ou convites) ainda. 
         // Se o saldo for maior que zero, significa que o endereço já foi convidado.
         require(balanceOf(to) == 0, "This address has already been invited");
 
@@ -54,7 +56,7 @@ contract Web3DevToken is ERC20 {
         // enviando o montante de um token (1 convite) para carteira `to`
         _mint(to, inviteAmount);
 
-        // atualizamos a contagem de convites realizados do `sender`
+        // atualizamos a contagem de convites realizados do `msg.sender`
         inviteCount[msg.sender]++;
     }
 
@@ -63,7 +65,8 @@ contract Web3DevToken is ERC20 {
         return inviteCount[account];
     }
 
-    // Desabilitar a função de transfer (faremos override) para que ninguém possa tranferir o convite dela para outra pessoa
+    // Desabilitar a função de transfer (faremos override) para que ninguém possa tranferir 
+    // o convite dela para outra pessoa
     function transfer(address, uint256) public pure override returns (bool) {
         revert("Transfers are disabled");
     }
