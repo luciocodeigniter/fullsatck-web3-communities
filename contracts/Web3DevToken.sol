@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.0 < 0.9.0;
+pragma solidity >0.8.0 < 0.9.0;
 
 // [x] O deployer do contrato receberá o primeiro convite
 // [x] Apenas endereços que já são convidados poderão convidar outros
 // [x] Um endereço não pode convidar a si mesmo (para não ter balanço demais)
 // [x] Cada endereço pode convidar no máximo 3 outros endereços
+// [x] Cada endereço só pode ser convidado uma vez
 // [x] Desabilitar a função de transfer (faremos override) para que ninguém possa tranferir o convite dela para outra pessoa
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -43,6 +44,11 @@ contract Web3DevToken is ERC20 {
 
         // Cada endereço pode convidar no máximo 3 outros endereços
         require(inviteCount[msg.sender] < MAX_INVITES, "You can't invite more than 3 people.");
+
+        // Cada endereço só pode ser convidado uma vez
+        // balanceOf(to) == 0: Garante que o endereço to não possui tokens (ou convites) ainda. 
+        // Se o saldo for maior que zero, significa que o endereço já foi convidado.
+        require(balanceOf(to) == 0, "This address has already been invited");
 
         // agora que as coisas estão validadas, podemos cconvidar a pessoa
         // enviando o montante de um token (1 convite) para carteira `to`
