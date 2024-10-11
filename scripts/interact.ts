@@ -11,9 +11,10 @@ import * as path from 'path';
 const filePath = path.resolve(__dirname, '../deployedContracts.json');
 const contractData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
-// quero um script para convidar um endereço. 
 //! Nesse caso estou usando o meu endereço de desenvolvimento da metamask: 0x7831d84E29E4CC3004864fe40ec39d608C5fF194
-const METAMASK_WALLET_ADDRESS = '0x7831d84E29E4CC3004864fe40ec39d608C5fF194';
+//! a convenção para nome de constrante é: EOA_ADDRESS 
+//! quando mencionamos EOA_ADDRESS, estamos falando do endereço público da conta do usuário que é usada para realizar transações ou interagir com contratos inteligentes na blockchain.
+const EOA_ADDRESS = '0x7831d84E29E4CC3004864fe40ec39d608C5fF194';
 
 
 async function main() {
@@ -29,22 +30,22 @@ async function main() {
     console.log(`======================BEFORE==========================`);
 
     // lendo alguns balanços.
-    // const balance = await web3DevToken.read.balanceOf([METAMASK_WALLET_ADDRESS]);
+    // const balance = await web3DevToken.read.balanceOf([EOA_ADDRESS]);
     // const balanceOfDeployer = await web3DevToken.read.balanceOf([account.account.address]);
-    // console.log(`Balance of developer wallet before ${METAMASK_WALLET_ADDRESS} is ${balance.toString()}`);
+    // console.log(`Balance of developer wallet before ${EOA_ADDRESS} is ${balance.toString()}`);
     // console.log(`Balance of deployer before ${account.account.address} is ${balanceOfDeployer.toString()}`);
 
     // console.log(`========================AFTER========================`);
 
-    // vamos convidar o endereço METAMASK_WALLET_ADDRESS
-    // const inviteTransactionHash = await web3DevToken.write.invite([METAMASK_WALLET_ADDRESS]);
+    // vamos convidar o endereço EOA_ADDRESS
+    const inviteTransactionHash = await web3DevToken.write.invite([EOA_ADDRESS]);
 
 
     // teste de erro para mais de três convites
-    // const inviteTransactionHash2 = await web3DevToken.write.invite([METAMASK_WALLET_ADDRESS]);
-    // const inviteTransactionHash3 = await web3DevToken.write.invite([METAMASK_WALLET_ADDRESS]);
-    // const inviteTransactionHash4 = await web3DevToken.write.invite([METAMASK_WALLET_ADDRESS]);
-    // const inviteTransactionHash5 = await web3DevToken.write.invite([METAMASK_WALLET_ADDRESS]);
+    // const inviteTransactionHash2 = await web3DevToken.write.invite([EOA_ADDRESS]);
+    // const inviteTransactionHash3 = await web3DevToken.write.invite([EOA_ADDRESS]);
+    // const inviteTransactionHash4 = await web3DevToken.write.invite([EOA_ADDRESS]);
+    // const inviteTransactionHash5 = await web3DevToken.write.invite([EOA_ADDRESS]);
 
     // teste de erro para convidar a si mesmo
     // const inviteTransactionHashDeployer = await web3DevToken.write.invite([account.account.address]);
